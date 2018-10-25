@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<title>pisau</title>
+<style>
+html, body {
+margin: 0;
+padding: 0;
+height: 100%;
+width: 100%;
+}
+.body,
+.head,
+.arm {
+background: red;
+}
+.body {
+width: 50px;
+height: 100px;
+position: absolute;
+bottom: 0;
+left: 50%;
+margin-left: -25px;
+}
+.arm {
+width: 20px;
+height: 50px;
+position: absolute;
+bottom: 90px;
+left: 50%;
+}
+.arm--left {
+transform: rotateZ(-45deg);
+margin-left: -35px;
+bottom: 90px;
+transform-origin: bottom center;
+animation: arm--left 0.2s linear infinite alternate;
+}
+@keyframes arm--right {
+0% { transform: rotateZ(30deg); }
+100% { transform: rotateZ(90deg); }
+}
+@keyframes arm--left {
+0% { transform: rotateZ(-30deg); }
+100% { transform: rotateZ(-90deg); }
+}
+.arm--right {
+transform: rotateZ(45deg);
+transform-origin: bottom center;
+margin-left: 15px;
+animation: arm--right 0.2s linear infinite alternate;
+}
+@keyframes head {
+0% { transform: rotateX(0); }
+100% { transform: rotateX(50deg); }
+}
+.head {
+border-radius: 50%;
+width: 40px;
+height: 40px;
+position: absolute;
+bottom: 105px;
+left: 50%;
+margin-left: -20px;
+transform-origin: bottom center;
+animation: head 0.5s linear infinite alternate;
+}
+</style>
+<div class="head"></div>
+<div class="body"></div>
+<div class="arm arm--left"></div>
+<div class="arm arm--right"></div>
+<script>
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+const particles = [];
+const count = 200;
+for (var i = count; i >= 0; i--) {
+	particles.push({ x: 50, y: 95, r: 2 });
+}
+function animate() {
+	var particle;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	for (var i = count; i >= count / 2; i--) {
+		ctx.beginPath();
+		particle = particles[i];
+		particle.x = particle.x + Math.random() / 2;
+		particle.y = particle.y - Math.random();
+		if (particle.x < 0 || particle.x > 100) {
+			particle.x = 50;
+			particle.y = 90;
+		}
+		particle.c = Math.random() * 255;
+		ctx.arc(particle.x * window.innerWidth / 100 , particle.y * window.innerHeight / 100 , particle.r, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.fillStyle = 'hsl(' + particle.c + ', 100%, 50%)';
+		ctx.fill();
+	}
+	for (var i = count / 2; i >= 0; i--) {
+		ctx.beginPath();
+		particle = particles[i];
+		particle.x = particle.x - Math.random() / 2;
+		particle.y = particle.y - Math.random();
+		if (particle.x < 0 || particle.x > 100) {
+			particle.x = 50;
+			particle.y = 90;
+		}
+		particle.c = Math.random() * 255;
+		ctx.arc(particle.x * window.innerWidth / 100 , particle.y * window.innerHeight / 100 , particle.r, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.fillStyle = 'hsl(' + particle.c + ', 100%, 50%)';
+		ctx.fill();
+	}
+	window.requestAnimationFrame(animate);
+}
+animate();
+document.body.appendChild(canvas);
+</script>
